@@ -18,8 +18,11 @@ func NewGinRouter(cm *handlers.RpcClientManager) *gin.Engine {
 	swaggerUrl := ginSwagger.URL("swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(files.Handler, swaggerUrl))
 
-	userGroup := router.Group("/user")
-	userGroup.POST("/register", cm.Register)
+	userGroup := router.Group("/users")
+	userGroup.POST("/register", cm.RegisterUser)
+	userGroup.GET("/:id", cm.GetProfile)
+	userGroup.PUT("/", cm.UpdateUser)
+	userGroup.DELETE("/:id", cm.DeleteUser)
 
 	return router
 }

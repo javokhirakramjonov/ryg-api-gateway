@@ -11,6 +11,12 @@ type Config struct {
 	UserService    struct {
 		Url string
 	}
+	TaskService struct {
+		Url string
+	}
+	ChallengeService struct {
+		Url string
+	}
 }
 
 func LoadConfig() *Config {
@@ -25,6 +31,16 @@ func LoadConfig() *Config {
 			Url string
 		}{
 			Url: os.Getenv("USER_SERVICE_URL"),
+		},
+		TaskService: struct {
+			Url string
+		}{
+			Url: os.Getenv("TASK_SERVICE_URL"),
+		},
+		ChallengeService: struct {
+			Url string
+		}{
+			Url: os.Getenv("CHALLENGE_SERVICE_URL"),
 		},
 	}
 }

@@ -1,11 +1,7 @@
 #!/bin/bash
-
-PROTO_DIR="./ryg-protos/user_service"
-OUT_DIR="."
-rm -rf "./gen_proto"
-mkdir -p "$OUT_DIR"
-
-echo "Generating Go files from .proto files..."
-protoc --proto_path=$PROTO_DIR --go_out=$OUT_DIR $PROTO_DIR/*.proto --go-grpc_out=$OUT_DIR
-
-echo "Protobuf generation completed."
+CURRENT_DIR=$1
+rm -rf ${CURRENT_DIR}/gen_proto
+for x in $(find ${CURRENT_DIR}/ryg-protos* -type d); do
+  protoc -I=${x} -I=${CURRENT_DIR} -I /usr/local/go --go_out=${CURRENT_DIR} \
+   --go-grpc_out=${CURRENT_DIR} ${x}/*.proto
+done

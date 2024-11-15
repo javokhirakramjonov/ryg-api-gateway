@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+	token "ryg-api-gateway/api/token"
 	pb "ryg-api-gateway/gen_proto/user_service"
+	"ryg-api-gateway/model"
 	"strconv"
 )
 
@@ -14,8 +17,8 @@ import (
 // @Produce json
 // @Param user body pb.CreateUserRequest true "User information"
 // @Success 201 {object} pb.User
-// @Router /users/register [post]
-func (h *RpcClientManager) RegisterUser(ctx *gin.Context) {
+// @Router /register [post]
+func (cm *RpcClientManager) RegisterUser(ctx *gin.Context) {
 	req := pb.CreateUserRequest{}
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -23,7 +26,7 @@ func (h *RpcClientManager) RegisterUser(ctx *gin.Context) {
 		return
 	}
 
-	res, err := h.User.CreateUser(ctx, &req)
+	res, err := cm.User.CreateUser(ctx, &req)
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
@@ -38,22 +41,16 @@ func (h *RpcClientManager) RegisterUser(ctx *gin.Context) {
 // @Description Get user profile
 // @Tags user
 // @Produce json
-// @Param id path int true "User ID"
 // @Success 200 {object} pb.User
-// @Router /users/{id} [get]
-func (h *RpcClientManager) GetProfile(ctx *gin.Context) {
+// @Router /users [get]
+// @Security BearerAuth
+func (cm *RpcClientManager) GetProfile(ctx *gin.Context) {
 	req := pb.GetUserRequest{}
 
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	req.Id = int32(id)
+	req.Id = ctx.GetInt64("user_id")
 
 	// Use ctx.Request.Context() to pass a gRPC-compatible context
-	res, err := h.User.GetUserById(ctx.Request.Context(), &req)
+	res, err := cm.User.GetUserById(ctx.Request.Context(), &req)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": "Failed to retrieve user profile"})
 		return
@@ -68,18 +65,23 @@ func (h *RpcClientManager) GetProfile(ctx *gin.Context) {
 // @Tags user
 // @Accept json
 // @Produce json
-// @Param user body pb.UpdateUserRequest true "User information"
+// @Param user body model.UpdateUserRequest true "User information"
 // @Success 200 {object} pb.User
 // @Router /users [put]
-func (h *RpcClientManager) UpdateUser(ctx *gin.Context) {
-	req := &pb.UpdateUserRequest{}
+// @Security BearerAuth
+func (cm *RpcClientManager) UpdateUser(ctx *gin.Context) {
+	req := &model.UpdateUserRequest{}
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := h.User.UpdateUser(ctx, req)
+	res, err := cm.User.UpdateUser(ctx, &pb.UpdateUserRequest{
+		Id:       ctx.GetInt64("user_id"),
+		FullName: req.FullName,
+		Email:    req.Email,
+	})
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
@@ -93,10 +95,10 @@ func (h *RpcClientManager) UpdateUser(ctx *gin.Context) {
 // @Summary DeleteUser user profile
 // @Description DeleteUser user profile
 // @Tags user
-// @Param id path int true "User ID"
 // @Success 204
-// @Router /users/{id} [delete]
-func (h *RpcClientManager) DeleteUser(ctx *gin.Context) {
+// @Router /users [delete]
+// @Security BearerAuth
+func (cm *RpcClientManager) DeleteUser(ctx *gin.Context) {
 	req := &pb.DeleteUserRequest{}
 
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -106,9 +108,9 @@ func (h *RpcClientManager) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	req.Id = int32(id)
+	req.Id = int64(id)
 
-	res, err := h.User.DeleteUser(ctx, req)
+	res, err := cm.User.DeleteUser(ctx, req)
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
@@ -116,4 +118,43 @@ func (h *RpcClientManager) DeleteUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(204, res)
+}
+
+// Login godoc
+// @Summary Login user
+// @Description Login user
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param user body model.LoginRequest true "User information"
+// @Success 200 {object} model.LoginResponse
+// @Router /login [post]
+func (cm *RpcClientManager) Login(ctx *gin.Context) {
+	req := &model.LoginRequest{}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := cm.User.GetUserForLogin(ctx, &pb.GetUserForLoginRequest{Email: req.Email})
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		ctx.JSON(401, gin.H{"error": "Invalid credentials"})
+		return
+	}
+
+	tkn, err := token.GenerateJWT(user.Id, user.Role)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"token": tkn})
 }

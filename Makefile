@@ -9,5 +9,6 @@ SWAGGER_GEN_SCRIPT := $(SWAGGER) init -g ./api/router.go -o $(SWAGGER_OUT_DIR) -
 swag-gen:
 	$(SWAGGER_GEN_SCRIPT)
 
-gen-proto:
-	./scripts/genProto.sh .
+update-protos:
+	git submodule update --remote
+	scripts/genProto.sh .

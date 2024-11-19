@@ -2,18 +2,16 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	pb "ryg-api-gateway/gen_proto/task_service"
 	"ryg-api-gateway/model"
 	"strconv"
-	"time"
 )
 
 // CreateChallenge godoc
 // @Security BearerAuth
 // @Summary Create a new challenge
 // @Description Create a new challenge
-// @Tags challenge
+// @Tags Challenge
 // @Accept json
 // @Produce json
 // @Param challenge body model.CreateChallengeRequest true "Challenge information"
@@ -30,8 +28,7 @@ func (cm *RpcClientManager) CreateChallenge(ctx *gin.Context) {
 	res, err := cm.Challenge.CreateChallenge(ctx, &pb.CreateChallengeRequest{
 		Title:       req.Title,
 		Description: req.Description,
-		StartDate:   timestamppb.New(time.Unix(req.StartDate, 0)),
-		EndDate:     timestamppb.New(time.Unix(req.EndDate, 0)),
+		Days:        req.Days,
 	})
 
 	if err != nil {
@@ -46,7 +43,7 @@ func (cm *RpcClientManager) CreateChallenge(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Get a challenge by ID
 // @Description Get a challenge by ID
-// @Tags challenge
+// @Tags Challenge
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
 // @Success 200 {object} pb.Challenge
@@ -77,7 +74,7 @@ func (cm *RpcClientManager) GetChallenge(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Get all challenges
 // @Description Get all challenges
-// @Tags challenge
+// @Tags Challenge
 // @Produce json
 // @Success 200 {object} pb.ChallengeList
 // @Router /challenges [get]
@@ -100,7 +97,7 @@ func (cm *RpcClientManager) GetChallenges(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Update a challenge by ID
 // @Description Update a challenge by ID
-// @Tags challenge
+// @Tags Challenge
 // @Accept json
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
@@ -126,8 +123,7 @@ func (cm *RpcClientManager) UpdateChallenge(ctx *gin.Context) {
 		Id:          int64(id),
 		Title:       req.Title,
 		Description: req.Description,
-		StartDate:   timestamppb.New(time.Unix(req.StartDate, 0)),
-		EndDate:     timestamppb.New(time.Unix(req.EndDate, 0)),
+		Days:        req.Days,
 		UserId:      int64(ctx.GetInt("user_id")),
 	})
 
@@ -143,7 +139,7 @@ func (cm *RpcClientManager) UpdateChallenge(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Delete a challenge by ID
 // @Description Delete a challenge by ID
-// @Tags challenge
+// @Tags Challenge
 // @Param challenge_id path int true "Challenge ID"
 // @Success 204
 // @Router /challenges/{challenge_id} [delete]
@@ -167,4 +163,70 @@ func (cm *RpcClientManager) DeleteChallenge(ctx *gin.Context) {
 	}
 
 	ctx.JSON(204, res)
+}
+
+// StartChallenge godoc
+// @Security BearerAuth
+// @Summary Start a challenge by ID
+// @Description Start a challenge by ID
+// @Tags Challenge
+// @Accept json
+// @Produce json
+// @Param challenge_id path int true "Challenge ID"
+// @Success 200 {object} pb.Challenge
+// @Router /challenges/{challenge_id}/start [post]
+func (cm *RpcClientManager) StartChallenge(ctx *gin.Context) {
+	req := pb.StartChallengeRequest{}
+
+	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
+		return
+	}
+
+	req.ChallengeId = int64(challengeId)
+	req.UserId = int64(ctx.GetInt("user_id"))
+
+	res, err := cm.Challenge.StartChallenge(ctx, &req)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, res)
+}
+
+// FinishChallenge godoc
+// @Security BearerAuth
+// @Summary Finish a challenge by ID
+// @Description Finish a challenge by ID
+// @Tags Challenge
+// @Accept json
+// @Produce json
+// @Param challenge_id path int true "Challenge ID"
+// @Success 200 {object} pb.Challenge
+// @Router /challenges/{challenge_id}/finish [post]
+func (cm *RpcClientManager) FinishChallenge(ctx *gin.Context) {
+	req := pb.FinishChallengeRequest{}
+
+	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
+		return
+	}
+
+	req.ChallengeId = int64(challengeId)
+	req.UserId = int64(ctx.GetInt("user_id"))
+
+	res, err := cm.Challenge.FinishChallenge(ctx, &req)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, res)
 }

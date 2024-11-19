@@ -12,7 +12,7 @@ import (
 // RegisterUser godoc
 // @Summary RegisterUser a new user
 // @Description RegisterUser a new user
-// @Tags user
+// @Tags Authentication
 // @Accept json
 // @Produce json
 // @Param user body pb.CreateUserRequest true "User information"
@@ -39,7 +39,7 @@ func (cm *RpcClientManager) RegisterUser(ctx *gin.Context) {
 // GetProfile godoc
 // @Summary Get user profile
 // @Description Get user profile
-// @Tags user
+// @Tags User
 // @Produce json
 // @Success 200 {object} pb.User
 // @Router /users [get]
@@ -62,7 +62,7 @@ func (cm *RpcClientManager) GetProfile(ctx *gin.Context) {
 // UpdateUser godoc
 // @Summary UpdateUser user profile
 // @Description UpdateUser user profile
-// @Tags user
+// @Tags User
 // @Accept json
 // @Produce json
 // @Param user body model.UpdateUserRequest true "User information"
@@ -94,7 +94,7 @@ func (cm *RpcClientManager) UpdateUser(ctx *gin.Context) {
 // DeleteUser godoc
 // @Summary DeleteUser user profile
 // @Description DeleteUser user profile
-// @Tags user
+// @Tags User
 // @Success 204
 // @Router /users [delete]
 // @Security BearerAuth
@@ -123,7 +123,7 @@ func (cm *RpcClientManager) DeleteUser(ctx *gin.Context) {
 // Login godoc
 // @Summary Login user
 // @Description Login user
-// @Tags user
+// @Tags Authentication
 // @Accept json
 // @Produce json
 // @Param user body model.LoginRequest true "User information"

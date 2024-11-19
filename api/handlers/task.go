@@ -17,7 +17,7 @@ const (
 // @Security BearerAuth
 // @Summary Create a new task
 // @Description Create a new task
-// @Tags task
+// @Tags Task
 // @Accept json
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
@@ -58,7 +58,7 @@ func (cm *RpcClientManager) CreateTask(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Create multiple tasks
 // @Description Create multiple tasks
-// @Tags task
+// @Tags Task
 // @Accept json
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
@@ -108,7 +108,7 @@ func (cm *RpcClientManager) CreateTasks(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Get a task by ID
 // @Description Get a task by ID
-// @Tags task
+// @Tags Task
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
 // @Param task_id path int true "Task ID"
@@ -149,7 +149,7 @@ func (cm *RpcClientManager) GetTask(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Get all tasks by challenge ID
 // @Description Get all tasks by challenge ID
-// @Tags task
+// @Tags Task
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
 // @Param date query string false "Date"
@@ -207,7 +207,7 @@ func (cm *RpcClientManager) GetTasks(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Update a task by ID
 // @Description Update a task by ID
-// @Tags task
+// @Tags Task
 // @Accept json
 // @Produce json
 // @Param challenge_id path int true "Challenge ID"
@@ -257,7 +257,7 @@ func (cm *RpcClientManager) UpdateTask(ctx *gin.Context) {
 // @Security BearerAuth
 // @Summary Delete a task by ID
 // @Description Delete a task by ID
-// @Tags task
+// @Tags Task
 // @Param challenge_id path int true "Challenge ID"
 // @Param task_id path int true "Task ID"
 // @Success 204
@@ -292,4 +292,62 @@ func (cm *RpcClientManager) DeleteTask(ctx *gin.Context) {
 	}
 
 	ctx.JSON(204, res)
+}
+
+// UpdateTaskStatus godoc
+// @Security BearerAuth
+// @Summary Update a task status by ID
+// @Description Update a task status by ID
+// @Tags Task
+// @Accept json
+// @Produce json
+// @Param challenge_id path int true "Challenge ID"
+// @Param task_id path int true "Task ID"
+// @Param status body model.UpdateTaskStatusRequest true "Task status information"
+// @Success 200 {object} pb.TaskWithStatus
+// @Router /challenges/{challenge_id}/tasks/{task_id}/status [put]
+func (cm *RpcClientManager) UpdateTaskStatus(ctx *gin.Context) {
+	taskId, err := strconv.Atoi(ctx.Param("task_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid task ID"})
+		return
+	}
+
+	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
+		return
+	}
+
+	req := model.UpdateTaskStatusRequest{}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	format := "02-01-2006"
+	date, err := time.Parse(format, req.Date)
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid date format"})
+		return
+	}
+
+	res, err := cm.Task.UpdateTaskStatus(ctx, &pb.UpdateTaskStatusRequest{
+		TaskId:      int64(taskId),
+		Status:      req.Status,
+		UserId:      int64(ctx.GetInt("user_id")),
+		Date:        timestamppb.New(date),
+		ChallengeId: int64(challengeId),
+	})
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, res)
 }

@@ -9,6 +9,18 @@ import (
 	_ "ryg-api-gateway/docs"
 )
 
+// @tag.name Authentication
+// @tag.description User registration and login methods
+
+// @tag.name User
+// @tag.description User methods
+
+// @tag.name Challenge
+// @tag.description Challenge methods
+
+// @tag.name Task
+// @tag.description Task methods
+
 // NewGinRouter creates a new gin router with the specified RpcClientManager
 // @Title RYG API Gateway
 // @Version 1.0
@@ -27,7 +39,8 @@ func NewGinRouter(cm *handlers.RpcClientManager) *gin.Engine {
 	router.POST("/register", cm.RegisterUser)
 
 	// User routes
-	userGroup := router.Group("/users").Use(token.JWTMiddleware())
+	userGroup := router.Group("/users")
+	userGroup.Use(token.JWTMiddleware())
 	userGroup.GET("", cm.GetProfile)
 	userGroup.PUT("", cm.UpdateUser)
 	userGroup.DELETE("", cm.DeleteUser)
@@ -41,6 +54,8 @@ func NewGinRouter(cm *handlers.RpcClientManager) *gin.Engine {
 	challengeGroup.GET("/", cm.GetChallenges)
 	challengeGroup.PUT("/:challenge_id", cm.UpdateChallenge)
 	challengeGroup.DELETE("/:challenge_id", cm.DeleteChallenge)
+	challengeGroup.POST("/:challenge_id/start", cm.StartChallenge)
+	challengeGroup.POST("/:challenge_id/finish", cm.FinishChallenge)
 
 	// Task routes
 	taskGroup := challengeGroup.Group("/:challenge_id/tasks")
@@ -50,6 +65,7 @@ func NewGinRouter(cm *handlers.RpcClientManager) *gin.Engine {
 	taskGroup.GET("/:task_id", cm.GetTask)
 	taskGroup.PUT("/:task_id", cm.UpdateTask)
 	taskGroup.DELETE("/:task_id", cm.DeleteTask)
+	taskGroup.PUT("/:task_id/status", cm.UpdateTaskStatus)
 
 	return router
 }

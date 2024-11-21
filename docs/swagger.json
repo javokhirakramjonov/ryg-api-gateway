@@ -1,0 +1,948 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the API Gateway for the RYG project.",
+        "title": "RYG API Gateway",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/challenges": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all challenges",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Get all challenges",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.ChallengeList"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new challenge",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Create a new challenge",
+                "parameters": [
+                    {
+                        "description": "Challenge information",
+                        "name": "challenge",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateChallengeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a challenge by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Get a challenge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a challenge by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Update a challenge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Challenge information",
+                        "name": "challenge",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateChallengeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a challenge by ID",
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Delete a challenge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/finish": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Finish a challenge by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Finish a challenge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/start": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Start a challenge by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Start a challenge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/tasks": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all tasks by challenge ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all tasks by challenge ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date",
+                        "name": "date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.TaskList"
+                        }
+                    },
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatusList"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create a new task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task information",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Task"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/tasks/bulk": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create multiple tasks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create multiple tasks",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Tasks information",
+                        "name": "tasks",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CreateTaskRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.TaskList"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/tasks/{task_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a task by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get a task by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Task"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a task by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Update a task by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task information",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Task"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a task by ID",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Delete a task by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/tasks/{task_id}/status": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a task status by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Update a task status by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task status information",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateTaskStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatus"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "User information",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "RegisterUser a new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "RegisterUser a new user",
+                "parameters": [
+                    {
+                        "description": "User information",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_user_service.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_user_service.User"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get user profile",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_user_service.User"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "UpdateUser user profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "UpdateUser user profile",
+                "parameters": [
+                    {
+                        "description": "User information",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_user_service.User"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "DeleteUser user profile",
+                "tags": [
+                    "User"
+                ],
+                "summary": "DeleteUser user profile",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.CreateChallengeRequest": {
+            "type": "object",
+            "properties": {
+                "days": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateTaskRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UpdateTaskStatusRequest": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UpdateUserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.Challenge": {
+            "type": "object",
+            "properties": {
+                "days": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "start_date": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.ChallengeList": {
+            "type": "object",
+            "properties": {
+                "challenges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
+                    }
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.Task": {
+            "type": "object",
+            "properties": {
+                "challenge_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.TaskList": {
+            "type": "object",
+            "properties": {
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Task"
+                    }
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.TaskWithStatus": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "task": {
+                    "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Task"
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_task_service.TaskWithStatusList": {
+            "type": "object",
+            "properties": {
+                "task_with_statuses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatus"
+                    }
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_user_service.CreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "ryg-api-gateway_gen_proto_user_service.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "timestamppb.Timestamp": {
+            "type": "object",
+            "properties": {
+                "nanos": {
+                    "description": "Non-negative fractions of a second at nanosecond resolution. Negative\nsecond values with fractions must still have non-negative nanos values\nthat count forward in time. Must be from 0 to 999,999,999\ninclusive.",
+                    "type": "integer"
+                },
+                "seconds": {
+                    "description": "Represents seconds of UTC time since Unix epoch\n1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to\n9999-12-31T23:59:59Z inclusive.",
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "description": "User registration and login methods",
+            "name": "Authentication"
+        },
+        {
+            "description": "User methods",
+            "name": "User"
+        },
+        {
+            "description": "Challenge methods",
+            "name": "Challenge"
+        },
+        {
+            "description": "Task methods",
+            "name": "Task"
+        }
+    ]
+}

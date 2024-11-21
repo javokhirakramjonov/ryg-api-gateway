@@ -1,0 +1,605 @@
+definitions:
+  model.CreateChallengeRequest:
+    properties:
+      days:
+        type: integer
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  model.CreateTaskRequest:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  model.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  model.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  model.UpdateTaskStatusRequest:
+    properties:
+      date:
+        type: string
+      status:
+        type: string
+    type: object
+  model.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+    type: object
+  ryg-api-gateway_gen_proto_task_service.Challenge:
+    properties:
+      days:
+        type: integer
+      description:
+        type: string
+      end_date:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      id:
+        type: integer
+      start_date:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      status:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  ryg-api-gateway_gen_proto_task_service.ChallengeList:
+    properties:
+      challenges:
+        items:
+          $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+        type: array
+    type: object
+  ryg-api-gateway_gen_proto_task_service.Task:
+    properties:
+      challenge_id:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  ryg-api-gateway_gen_proto_task_service.TaskList:
+    properties:
+      tasks:
+        items:
+          $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Task'
+        type: array
+    type: object
+  ryg-api-gateway_gen_proto_task_service.TaskWithStatus:
+    properties:
+      date:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      status:
+        type: string
+      task:
+        $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Task'
+    type: object
+  ryg-api-gateway_gen_proto_task_service.TaskWithStatusList:
+    properties:
+      task_with_statuses:
+        items:
+          $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatus'
+        type: array
+    type: object
+  ryg-api-gateway_gen_proto_user_service.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+    type: object
+  ryg-api-gateway_gen_proto_user_service.User:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      role:
+        type: string
+    type: object
+  timestamppb.Timestamp:
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive.
+        type: integer
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: This is the API Gateway for the RYG project.
+  title: RYG API Gateway
+  version: "1.0"
+paths:
+  /challenges:
+    get:
+      description: Get all challenges
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.ChallengeList'
+      security:
+      - BearerAuth: []
+      summary: Get all challenges
+      tags:
+      - Challenge
+    post:
+      consumes:
+      - application/json
+      description: Create a new challenge
+      parameters:
+      - description: Challenge information
+        in: body
+        name: challenge
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateChallengeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+      security:
+      - BearerAuth: []
+      summary: Create a new challenge
+      tags:
+      - Challenge
+  /challenges/{challenge_id}:
+    delete:
+      description: Delete a challenge by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete a challenge by ID
+      tags:
+      - Challenge
+    get:
+      description: Get a challenge by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+      security:
+      - BearerAuth: []
+      summary: Get a challenge by ID
+      tags:
+      - Challenge
+    put:
+      consumes:
+      - application/json
+      description: Update a challenge by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Challenge information
+        in: body
+        name: challenge
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateChallengeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+      security:
+      - BearerAuth: []
+      summary: Update a challenge by ID
+      tags:
+      - Challenge
+  /challenges/{challenge_id}/finish:
+    post:
+      consumes:
+      - application/json
+      description: Finish a challenge by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+      security:
+      - BearerAuth: []
+      summary: Finish a challenge by ID
+      tags:
+      - Challenge
+  /challenges/{challenge_id}/start:
+    post:
+      consumes:
+      - application/json
+      description: Start a challenge by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge'
+      security:
+      - BearerAuth: []
+      summary: Start a challenge by ID
+      tags:
+      - Challenge
+  /challenges/{challenge_id}/tasks:
+    get:
+      description: Get all tasks by challenge ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Date
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.TaskList'
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatusList'
+      security:
+      - BearerAuth: []
+      summary: Get all tasks by challenge ID
+      tags:
+      - Task
+    post:
+      consumes:
+      - application/json
+      description: Create a new task
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Task information
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Task'
+      security:
+      - BearerAuth: []
+      summary: Create a new task
+      tags:
+      - Task
+  /challenges/{challenge_id}/tasks/{task_id}:
+    delete:
+      description: Delete a task by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete a task by ID
+      tags:
+      - Task
+    get:
+      description: Get a task by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Task'
+      security:
+      - BearerAuth: []
+      summary: Get a task by ID
+      tags:
+      - Task
+    put:
+      consumes:
+      - application/json
+      description: Update a task by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      - description: Task information
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.Task'
+      security:
+      - BearerAuth: []
+      summary: Update a task by ID
+      tags:
+      - Task
+  /challenges/{challenge_id}/tasks/{task_id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update a task status by ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      - description: Task status information
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateTaskStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.TaskWithStatus'
+      security:
+      - BearerAuth: []
+      summary: Update a task status by ID
+      tags:
+      - Task
+  /challenges/{challenge_id}/tasks/bulk:
+    post:
+      consumes:
+      - application/json
+      description: Create multiple tasks
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: integer
+      - description: Tasks information
+        in: body
+        name: tasks
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/model.CreateTaskRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_task_service.TaskList'
+      security:
+      - BearerAuth: []
+      summary: Create multiple tasks
+      tags:
+      - Task
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+      summary: Login user
+      tags:
+      - Authentication
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: RegisterUser a new user
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/ryg-api-gateway_gen_proto_user_service.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_user_service.User'
+      summary: RegisterUser a new user
+      tags:
+      - Authentication
+  /users:
+    delete:
+      description: DeleteUser user profile
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: DeleteUser user profile
+      tags:
+      - User
+    get:
+      description: Get user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_user_service.User'
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: UpdateUser user profile
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ryg-api-gateway_gen_proto_user_service.User'
+      security:
+      - BearerAuth: []
+      summary: UpdateUser user profile
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: User registration and login methods
+  name: Authentication
+- description: User methods
+  name: User
+- description: Challenge methods
+  name: Challenge
+- description: Task methods
+  name: Task

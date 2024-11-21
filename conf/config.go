@@ -5,8 +5,8 @@ import (
 )
 
 type Config struct {
-	ApiGatewayPort string
-	UserService    struct {
+	ApiGatewayUrl string
+	UserService   struct {
 		Url string
 	}
 	TaskService struct {
@@ -19,21 +19,21 @@ type Config struct {
 
 func LoadConfig() *Config {
 	return &Config{
-		ApiGatewayPort: os.Getenv("API_GATEWAY_PORT"),
+		ApiGatewayUrl: os.Getenv("RYG_API_GATEWAY_URL"),
 		UserService: struct {
 			Url string
 		}{
-			Url: os.Getenv("USER_SERVICE_URL"),
+			Url: os.Getenv("RYG_USER_SERVICE_URL"),
 		},
 		TaskService: struct {
 			Url string
 		}{
-			Url: os.Getenv("TASK_SERVICE_URL"),
+			Url: os.Getenv("RYG_TASK_SERVICE_URL"),
 		},
 		ChallengeService: struct {
 			Url string
 		}{
-			Url: os.Getenv("CHALLENGE_SERVICE_URL"),
+			Url: os.Getenv("RYG_TASK_SERVICE_URL"),
 		},
 	}
 }

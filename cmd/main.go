@@ -14,7 +14,7 @@ func main() {
 
 	r := api.NewGinRouter(cm)
 
-	err := r.Run(cnf.ApiGatewayPort)
+	err := r.Run(cnf.ApiGatewayUrl)
 	if err != nil {
 		log.Fatal(err)
 	}

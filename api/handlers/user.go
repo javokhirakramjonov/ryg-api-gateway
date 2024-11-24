@@ -149,7 +149,7 @@ func (cm *RpcClientManager) Login(ctx *gin.Context) {
 		return
 	}
 
-	tkn, err := token.GenerateJWT(user.Id, user.Role)
+	tkn, err := token.GenerateJWT(user.Id, user.Email, user.Role)
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})

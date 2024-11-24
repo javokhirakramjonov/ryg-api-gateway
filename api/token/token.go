@@ -12,15 +12,17 @@ var jwtKey = []byte("your_secret_key")
 
 type Claims struct {
 	UserID int64  `json:"user_id"`
+	Email  string `json:"email"`
 	Role   string `json:"role"`
 	jwt.StandardClaims
 }
 
-func GenerateJWT(userID int64, role string) (string, error) {
+func GenerateJWT(userID int64, email, role string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &Claims{
 		UserID: userID,
+		Email:  email,
 		Role:   role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
@@ -58,6 +60,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("user_id", claims.UserID)
+		c.Set("email", claims.Email)
 		c.Set("role", claims.Role)
 		c.Next()
 	}

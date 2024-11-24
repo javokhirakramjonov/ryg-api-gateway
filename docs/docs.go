@@ -181,6 +181,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/challenges/{challenge_id}/accept": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Accept a challenge invitation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Accept a challenge invitation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/challenges/{challenge_id}/finish": {
             "post": {
                 "security": [
@@ -214,6 +248,49 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/ryg-api-gateway_gen_proto_task_service.Challenge"
                         }
+                    }
+                }
+            }
+        },
+        "/challenges/{challenge_id}/invite": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Invite a user to a challenge",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Invite a user to a challenge",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User ID",
+                        "name": "add_user_to_challenge_request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AddUserToChallengeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }
@@ -572,6 +649,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/challenges/{challenge_id}/unsubscribe": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Unsubscribe from a challenge",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Unsubscribe from a challenge",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Login user",
@@ -721,6 +832,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.AddUserToChallengeRequest": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.CreateChallengeRequest": {
             "type": "object",
             "properties": {
@@ -810,9 +929,6 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },

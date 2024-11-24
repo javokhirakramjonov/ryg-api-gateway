@@ -230,3 +230,104 @@ func (cm *RpcClientManager) FinishChallenge(ctx *gin.Context) {
 
 	ctx.JSON(200, res)
 }
+
+// InviteUser godoc
+// @Security BearerAuth
+// @Summary Invite a user to a challenge
+// @Description Invite a user to a challenge
+// @Tags Challenge
+// @Accept json
+// @Produce json
+// @Param challenge_id path int true "Challenge ID"
+// @Param add_user_to_challenge_request body model.AddUserToChallengeRequest true "User ID"
+// @Success 200
+// @Router /challenges/{challenge_id}/invite [post]
+func (cm *RpcClientManager) InviteUser(ctx *gin.Context) {
+	req := model.AddUserToChallengeRequest{}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
+		return
+	}
+
+	res, err := cm.Challenge.AddUserToChallenge(ctx, &pb.AddUserToChallengeRequest{
+		ChallengeId: int64(challengeId),
+		UserId:      ctx.GetInt64("user_id"),
+		UserToAddId: req.UserId,
+		Email:       ctx.GetString("email"),
+	})
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, res)
+}
+
+// AcceptChallengeInvitation godoc
+// @Security BearerAuth
+// @Summary Accept a challenge invitation
+// @Description Accept a challenge invitation
+// @Tags Challenge
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /challenges/accept [post]
+func (cm *RpcClientManager) AcceptChallengeInvitation(ctx *gin.Context) {
+	invitationToken := ctx.Query("token")
+
+	req := pb.SubscribeToChallengeRequest{}
+
+	req.Token = invitationToken
+	req.UserId = int64(ctx.GetInt("user_id"))
+
+	res, err := cm.Challenge.SubscribeToChallenge(ctx, &req)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, res)
+}
+
+// UnsubscribeFromChallenge godoc
+// @Security BearerAuth
+// @Summary Unsubscribe from a challenge
+// @Description Unsubscribe from a challenge
+// @Tags Challenge
+// @Accept json
+// @Produce json
+// @Param challenge_id path int true "Challenge ID"
+// @Success 204
+// @Router /challenges/{challenge_id}/unsubscribe [delete]
+func (cm *RpcClientManager) UnsubscribeFromChallenge(ctx *gin.Context) {
+	req := pb.UnsubscribeFromChallengeRequest{}
+
+	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
+		return
+	}
+
+	req.ChallengeId = int64(challengeId)
+	req.UserId = int64(ctx.GetInt("user_id"))
+
+	res, err := cm.Challenge.UnsubscribeFromChallenge(ctx, &req)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(204, res)
+}

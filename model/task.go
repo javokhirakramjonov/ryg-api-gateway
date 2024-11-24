@@ -15,3 +15,7 @@ type UpdateTaskStatusRequest struct {
 	Date   string `json:"date"`
 	Status string `json:"status"`
 }
+
+type AddUserToChallengeRequest struct {
+	UserId int64 `json:"user_id"`
+}

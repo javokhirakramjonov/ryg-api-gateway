@@ -56,6 +56,9 @@ func NewGinRouter(cm *handlers.RpcClientManager) *gin.Engine {
 	challengeGroup.DELETE("/:challenge_id", cm.DeleteChallenge)
 	challengeGroup.POST("/:challenge_id/start", cm.StartChallenge)
 	challengeGroup.POST("/:challenge_id/finish", cm.FinishChallenge)
+	challengeGroup.POST("/:challenge_id/invite", cm.InviteUser)
+	challengeGroup.POST("/accept", cm.AcceptChallengeInvitation)
+	challengeGroup.DELETE("/:challenge_id/unsubscribe", cm.UnsubscribeFromChallenge)
 
 	// Task routes
 	taskGroup := challengeGroup.Group("/:challenge_id/tasks")

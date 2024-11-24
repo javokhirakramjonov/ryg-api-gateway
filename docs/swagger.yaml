@@ -251,27 +251,6 @@ paths:
       summary: Update a challenge by ID
       tags:
       - Challenge
-  /challenges/{challenge_id}/accept:
-    post:
-      consumes:
-      - application/json
-      description: Accept a challenge invitation
-      parameters:
-      - description: Challenge ID
-        in: path
-        name: challenge_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - BearerAuth: []
-      summary: Accept a challenge invitation
-      tags:
-      - Challenge
   /challenges/{challenge_id}/finish:
     post:
       consumes:
@@ -566,6 +545,21 @@ paths:
       security:
       - BearerAuth: []
       summary: Unsubscribe from a challenge
+      tags:
+      - Challenge
+  /challenges/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept a challenge invitation
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Accept a challenge invitation
       tags:
       - Challenge
   /login:

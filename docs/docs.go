@@ -77,6 +77,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/challenges/accept": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Accept a challenge invitation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenge"
+                ],
+                "summary": "Accept a challenge invitation",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/challenges/{challenge_id}": {
             "get": {
                 "security": [
@@ -177,40 +202,6 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
-                    }
-                }
-            }
-        },
-        "/challenges/{challenge_id}/accept": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Accept a challenge invitation",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Challenge"
-                ],
-                "summary": "Accept a challenge invitation",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Challenge ID",
-                        "name": "challenge_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
                     }
                 }
             }

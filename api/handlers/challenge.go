@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	pb "ryg-api-gateway/gen_proto/task_service"
+	pbu "ryg-api-gateway/gen_proto/user_service"
 	"ryg-api-gateway/model"
 	"strconv"
 )
@@ -257,11 +258,20 @@ func (cm *RpcClientManager) InviteUser(ctx *gin.Context) {
 		return
 	}
 
+	invitee, err := cm.User.GetUserById(ctx, &pbu.GetUserRequest{
+		Id: req.UserId,
+	})
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
 	res, err := cm.Challenge.AddUserToChallenge(ctx, &pb.AddUserToChallengeRequest{
 		ChallengeId: int64(challengeId),
 		UserId:      ctx.GetInt64("user_id"),
 		UserToAddId: req.UserId,
-		Email:       ctx.GetString("email"),
+		Email:       invitee.Email,
 	})
 
 	if err != nil {

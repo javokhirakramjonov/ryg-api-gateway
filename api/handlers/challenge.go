@@ -30,7 +30,7 @@ func (cm *RpcClientManager) CreateChallenge(ctx *gin.Context) {
 		Title:       req.Title,
 		Description: req.Description,
 		Days:        req.Days,
-		UserId:      int64(ctx.GetInt("user_id")),
+		UserId:      ctx.GetInt64("user_id"),
 	})
 
 	if err != nil {
@@ -61,7 +61,7 @@ func (cm *RpcClientManager) GetChallenge(ctx *gin.Context) {
 	}
 
 	req.Id = int64(id)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.GetChallengeById(ctx, &req)
 
@@ -84,7 +84,7 @@ func (cm *RpcClientManager) GetChallenge(ctx *gin.Context) {
 func (cm *RpcClientManager) GetChallenges(ctx *gin.Context) {
 	req := pb.GetChallengesRequest{}
 
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.GetChallengesByUserId(ctx, &req)
 
@@ -127,7 +127,7 @@ func (cm *RpcClientManager) UpdateChallenge(ctx *gin.Context) {
 		Title:       req.Title,
 		Description: req.Description,
 		Days:        req.Days,
-		UserId:      int64(ctx.GetInt("user_id")),
+		UserId:      ctx.GetInt64("user_id"),
 	})
 
 	if err != nil {
@@ -157,7 +157,7 @@ func (cm *RpcClientManager) DeleteChallenge(ctx *gin.Context) {
 	}
 
 	req.Id = int64(id)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.DeleteChallenge(ctx, &req)
 
@@ -190,7 +190,7 @@ func (cm *RpcClientManager) StartChallenge(ctx *gin.Context) {
 	}
 
 	req.ChallengeId = int64(challengeId)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.StartChallenge(ctx, &req)
 
@@ -223,7 +223,7 @@ func (cm *RpcClientManager) FinishChallenge(ctx *gin.Context) {
 	}
 
 	req.ChallengeId = int64(challengeId)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.FinishChallenge(ctx, &req)
 
@@ -300,7 +300,7 @@ func (cm *RpcClientManager) AcceptChallengeInvitation(ctx *gin.Context) {
 	req := pb.SubscribeToChallengeRequest{}
 
 	req.Token = invitationToken
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.SubscribeToChallenge(ctx, &req)
 
@@ -333,7 +333,7 @@ func (cm *RpcClientManager) UnsubscribeFromChallenge(ctx *gin.Context) {
 	}
 
 	req.ChallengeId = int64(challengeId)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.UnsubscribeFromChallenge(ctx, &req)
 

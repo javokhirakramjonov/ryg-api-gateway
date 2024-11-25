@@ -43,7 +43,7 @@ func (cm *RpcClientManager) CreateTask(ctx *gin.Context) {
 		Title:       req.Title,
 		Description: req.Description,
 		ChallengeId: int64(challengeId),
-		UserId:      int64(ctx.GetInt("user_id")),
+		UserId:      ctx.GetInt64("user_id"),
 	})
 
 	if err != nil {
@@ -74,7 +74,7 @@ func (cm *RpcClientManager) CreateTasks(ctx *gin.Context) {
 	}
 
 	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
-	userId := int64(ctx.GetInt("user_id"))
+	userId := ctx.GetInt64("user_id")
 
 	if err != nil {
 		ctx.JSON(400, gin.H{"error": "Invalid challenge ID"})
@@ -133,7 +133,7 @@ func (cm *RpcClientManager) GetTask(ctx *gin.Context) {
 
 	req.Id = int64(id)
 	req.ChallengeId = int64(challengeId)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Task.GetTaskById(ctx, &req)
 
@@ -169,7 +169,7 @@ func (cm *RpcClientManager) GetTasks(ctx *gin.Context) {
 	if date == "" {
 		req := pb.GetTasksByChallengeIdRequest{}
 		req.ChallengeId = int64(challengeId)
-		req.UserId = int64(ctx.GetInt("user_id"))
+		req.UserId = ctx.GetInt64("user_id")
 
 		res, err := cm.Task.GetTasksByChallengeId(ctx, &req)
 
@@ -189,7 +189,7 @@ func (cm *RpcClientManager) GetTasks(ctx *gin.Context) {
 
 		req := pb.GetTaskByChallengeIdAndDateRequest{}
 		req.ChallengeId = int64(challengeId)
-		req.UserId = int64(ctx.GetInt("user_id"))
+		req.UserId = ctx.GetInt64("user_id")
 		req.Date = timestamppb.New(dateAsTime)
 
 		res, err := cm.Task.GetTasksByChallengeIdAndDate(ctx, &req)
@@ -241,7 +241,7 @@ func (cm *RpcClientManager) UpdateTask(ctx *gin.Context) {
 		Id:          int64(id),
 		Title:       req.Title,
 		Description: req.Description,
-		UserId:      int64(ctx.GetInt("user_id")),
+		UserId:      ctx.GetInt64("user_id"),
 		ChallengeId: int64(challengeId),
 	})
 
@@ -273,7 +273,7 @@ func (cm *RpcClientManager) DeleteTask(ctx *gin.Context) {
 	}
 
 	req.Id = int64(id)
-	req.UserId = int64(ctx.GetInt("user_id"))
+	req.UserId = ctx.GetInt64("user_id")
 
 	challengeId, err := strconv.Atoi(ctx.Param("challenge_id"))
 
@@ -339,7 +339,7 @@ func (cm *RpcClientManager) UpdateTaskStatus(ctx *gin.Context) {
 	res, err := cm.Task.UpdateTaskStatus(ctx, &pb.UpdateTaskStatusRequest{
 		TaskId:      int64(taskId),
 		Status:      req.Status,
-		UserId:      int64(ctx.GetInt("user_id")),
+		UserId:      ctx.GetInt64("user_id"),
 		Date:        timestamppb.New(date),
 		ChallengeId: int64(challengeId),
 	})

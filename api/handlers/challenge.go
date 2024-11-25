@@ -61,6 +61,7 @@ func (cm *RpcClientManager) GetChallenge(ctx *gin.Context) {
 	}
 
 	req.Id = int64(id)
+	req.UserId = int64(ctx.GetInt("user_id"))
 
 	res, err := cm.Challenge.GetChallengeById(ctx, &req)
 
@@ -156,6 +157,7 @@ func (cm *RpcClientManager) DeleteChallenge(ctx *gin.Context) {
 	}
 
 	req.Id = int64(id)
+	req.UserId = int64(ctx.GetInt("user_id"))
 
 	res, err := cm.Challenge.DeleteChallenge(ctx, &req)
 

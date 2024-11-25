@@ -30,6 +30,7 @@ func (cm *RpcClientManager) CreateChallenge(ctx *gin.Context) {
 		Title:       req.Title,
 		Description: req.Description,
 		Days:        req.Days,
+		UserId:      int64(ctx.GetInt("user_id")),
 	})
 
 	if err != nil {

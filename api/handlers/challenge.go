@@ -293,14 +293,14 @@ func (cm *RpcClientManager) InviteUser(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /challenges/accept [post]
+// @Param token query string true "Invitation token"
+// @Router /challenges/accept [get]
 func (cm *RpcClientManager) AcceptChallengeInvitation(ctx *gin.Context) {
 	invitationToken := ctx.Query("token")
 
 	req := pb.SubscribeToChallengeRequest{}
 
 	req.Token = invitationToken
-	req.UserId = ctx.GetInt64("user_id")
 
 	res, err := cm.Challenge.SubscribeToChallenge(ctx, &req)
 

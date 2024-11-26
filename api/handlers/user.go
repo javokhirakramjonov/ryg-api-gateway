@@ -16,7 +16,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param user body pb.CreateUserRequest true "User information"
-// @Success 201 {object} pb.User
+// @Success 201 {object} model.LoginResponse
 // @Router /register [post]
 func (cm *RpcClientManager) RegisterUser(ctx *gin.Context) {
 	req := pb.CreateUserRequest{}
@@ -26,14 +26,23 @@ func (cm *RpcClientManager) RegisterUser(ctx *gin.Context) {
 		return
 	}
 
-	res, err := cm.User.CreateUser(ctx, &req)
+	user, err := cm.User.CreateUser(ctx, &req)
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(201, res)
+	tkn, err := token.GenerateJWT(user.Id, user.Email, user.Role)
+
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(201, model.LoginResponse{
+		Token: tkn,
+	})
 }
 
 // GetProfile godoc
@@ -156,5 +165,7 @@ func (cm *RpcClientManager) Login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, gin.H{"token": tkn})
+	ctx.JSON(201, model.LoginResponse{
+		Token: tkn,
+	})
 }

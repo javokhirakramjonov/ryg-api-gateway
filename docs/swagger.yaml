@@ -19,6 +19,8 @@ definitions:
         type: string
       title:
         type: string
+      week_days:
+        type: integer
     type: object
   model.LoginRequest:
     properties:
@@ -548,10 +550,16 @@ paths:
       tags:
       - Challenge
   /challenges/accept:
-    post:
+    get:
       consumes:
       - application/json
       description: Accept a challenge invitation
+      parameters:
+      - description: Invitation token
+        in: query
+        name: token
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -602,7 +610,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/ryg-api-gateway_gen_proto_user_service.User'
+            $ref: '#/definitions/model.LoginResponse'
       summary: RegisterUser a new user
       tags:
       - Authentication

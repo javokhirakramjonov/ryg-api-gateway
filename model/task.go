@@ -9,6 +9,7 @@ type CreateChallengeRequest struct {
 type CreateTaskRequest struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	WeekDays    int32  `json:"week_days"`
 }
 
 type UpdateTaskStatusRequest struct {

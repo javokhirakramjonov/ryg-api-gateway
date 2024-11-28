@@ -78,7 +78,7 @@ const docTemplate = `{
             }
         },
         "/challenges/accept": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -95,6 +95,15 @@ const docTemplate = `{
                     "Challenge"
                 ],
                 "summary": "Accept a challenge invitation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Invitation token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -736,7 +745,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/ryg-api-gateway_gen_proto_user_service.User"
+                            "$ref": "#/definitions/model.LoginResponse"
                         }
                     }
                 }
@@ -853,6 +862,9 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                },
+                "week_days": {
+                    "type": "integer"
                 }
             }
         },
